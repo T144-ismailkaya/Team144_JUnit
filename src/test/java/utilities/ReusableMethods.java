@@ -1,8 +1,12 @@
 package utilities;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -58,4 +62,97 @@ public class ReusableMethods {
         }
     }
 
+    public static void getFullScreenshot(WebDriver driver, String screenshotIsmi){
+        // 1.adim screenshot objesi olusturmak ve deger olarak driver'imizi atamak
+        TakesScreenshot tss = (TakesScreenshot) driver;
+
+        // 2.adim screenshot'i kaydedecegimiz File'i olusturun
+        File tumSayfaSS = new File("target/ekranGoruntuleri/"+screenshotIsmi+".png");
+
+        // 3.adim screenshot'i alip gecici bir dosyaya kopyalayalim
+        File geciciDosya = tss.getScreenshotAs(OutputType.FILE);
+
+        // 4.adim gecici dosyayi, asil kaydetmek istedigimiz dosyaya kopyalayalim
+        try {
+            FileUtils.copyFile(geciciDosya,tumSayfaSS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getFullScreenshot(WebDriver driver){
+        // dosya isimlerine tarih etiketi ekleyelim
+        // ... 240829114023 gibi bir etiket eklemek dosya ismini benzersiz yapar
+
+        LocalDateTime zaman = LocalDateTime.now(); // 2024.08.29T11:42:23:123456
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+        String tarihEtiketi = zaman.format(dateTimeFormatter); // 240829114023
+
+        // 1.adim screenshot objesi olusturmak ve deger olarak driver'imizi atamak
+        TakesScreenshot tss = (TakesScreenshot) driver;
+
+        // 2.adim screenshot'i kaydedecegimiz File'i olusturun
+        File tumSayfaSS = new File("target/ekranGoruntuleri/TumSayfaSS_"+tarihEtiketi+".png");
+
+        // 3.adim screenshot'i alip gecici bir dosyaya kopyalayalim
+        File geciciDosya = tss.getScreenshotAs(OutputType.FILE);
+
+        // 4.adim gecici dosyayi, asil kaydetmek istedigimiz dosyaya kopyalayalim
+        try {
+            FileUtils.copyFile(geciciDosya,tumSayfaSS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getWebelementScreenshot(WebElement istenenWebelement){
+
+        // tarih etiketi olusturalim
+        LocalDateTime zaman = LocalDateTime.now(); // 2024.08.29T11:42:23:123456
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+        String tarihEtiketi = zaman.format(dateTimeFormatter); // 240829114023
+
+
+        // 1.adim kullanacagimiz WebElementi locate edip kaydedin
+
+        // 2.adim kaydedeceginiz dosyayi olusturun
+        File webelementSS = new File("target/ekranGoruntuleri/webelementSS_"+tarihEtiketi+".png");
+
+        // 3.adim webelementi kullanarak screenshot'i alip gecici dosyaya kaydedin
+        File geciciDosya = istenenWebelement.getScreenshotAs(OutputType.FILE);
+
+        // 4.adim gecici dosyayi asil dosyaya kopyalayalim
+        try {
+            FileUtils.copyFile(geciciDosya,webelementSS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getWebelementScreenshot(WebElement istenenWebelement,String resimIsmi){
+
+        // tarih etiketi olusturalim
+        LocalDateTime zaman = LocalDateTime.now(); // 2024.08.29T11:42:23:123456
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+        String tarihEtiketi = zaman.format(dateTimeFormatter); // 240829114023
+
+
+        // 1.adim kullanacagimiz WebElementi locate edip kaydedin
+
+        // 2.adim kaydedeceginiz dosyayi olusturun
+        File webelementSS = new File("target/ekranGoruntuleri/"+resimIsmi+"_"+tarihEtiketi+".png");
+
+        // 3.adim webelementi kullanarak screenshot'i alip gecici dosyaya kaydedin
+        File geciciDosya = istenenWebelement.getScreenshotAs(OutputType.FILE);
+
+        // 4.adim gecici dosyayi asil dosyaya kopyalayalim
+        try {
+            FileUtils.copyFile(geciciDosya,webelementSS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
